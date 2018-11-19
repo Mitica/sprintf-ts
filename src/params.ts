@@ -21,17 +21,17 @@ export function parseParams(format: string): TsParam[] {
 
 function formatParamsToTsParams(formatParams: FormatParam[]) {
     const list: TsParam[] = [];
-    const objFormatParams: FormatParam[] = []
+    const formatParamsWithNames: FormatParam[] = []
 
     let countParamsWithOrder = 0;
 
     formatParams.forEach((param, i) => {
         if (param.name) {
-            objFormatParams.push(param);
+            formatParamsWithNames.push(param);
             return;
         }
 
-        let index = i - countParamsWithOrder;
+        let index = i - countParamsWithOrder - formatParamsWithNames.length;
         if (param.order) {
             countParamsWithOrder++;
             index = param.order - 1;
@@ -45,7 +45,26 @@ function formatParamsToTsParams(formatParams: FormatParam[]) {
         list[index] = { name, type };
     })
 
+    if (formatParamsWithNames.length) {
+        const type = [formatDataParamType(formatParamsWithNames)];
+        const name = 'p' + (list.length + 1);
+        list.push({ name, type });
+    }
+
     return list;
+}
+
+function formatDataParamType(formatParams: FormatParam[]) {
+    const data: { [index: string]: string[] } = {}
+
+    formatParams.forEach((param) => {
+        const name = param.name || '';
+        if (!data[name]) {
+            data[name] = getParamTypes(param.type);
+        }
+    })
+
+    return '{ ' + Object.keys(data).map(item => item + ': ' + data[item].join(' | ')).join('; ') + ' }';
 }
 
 
