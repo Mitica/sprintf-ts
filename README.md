@@ -1,18 +1,18 @@
-# strintf-ts
+# sprintf-ts
 
-strintf TypeScript utils.
+sprintf TypeScript utils.
 
 ## API
 
 
 ### parseParams(format: string): TsParam[]
 
-Parse params from a strintf format.
+Parse params from a sprintf format.
 
 #### Usage
 
 ```ts
-import { parseParams } from 'strintf-ts'
+import { parseParams } from 'sprintf-ts'
 
 let params = parseParams('Hello %1$s, %s, %2$s, %s');
 // = [{ name: 'p1', type: ['string'] }, { name: 'p2', type: ['string'] }]
